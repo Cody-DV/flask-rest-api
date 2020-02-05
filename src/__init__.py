@@ -18,10 +18,12 @@ def create_app():
 
         # Imports
         from . import routes
+        from .utils import seed_books_table
 
         # Create tables for our models
         db.create_all()
 
-        # TODO: Seed book titles into database
+        # Seed Books table
+        seed_books_table()
 
         return app

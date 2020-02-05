@@ -12,7 +12,11 @@ class Request(db.Model):
         return(f'<Title: {self.title} Email: {self.email}')
 
 
-# Define Schema
 class RequestSchema(ma.Schema):
     class Meta:
         fields = ('id', 'title', 'email', 'timestamp')
+
+
+class Book(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100))
