@@ -58,6 +58,7 @@ def get_all_requests():
         all_requests = Request.query.all()
         result = requests_schema.dump(all_requests)
 
+        # TODO: Fix for empty array response
         if not result:
             api_response("success", "No Requests were returned."), 204
 
