@@ -12,6 +12,8 @@ flask = "*"
 flask-sqlalchemy = "*"
 marshmallow-sqlalchemy = "*"
 flask-marshmallow = "*"
+python-dotenv = "*"
+validate-email = "*"
 
 [requires]
 python_version = "3.6"
