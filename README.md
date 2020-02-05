@@ -30,7 +30,7 @@ docker build -t flask-rest-api .
 
 #### Run
 ```
-docker run -d --rm --env-file=.env --name flask-container -p      5000:5000 flask-rest-api
+docker run -d --rm --env-file=.env --name flask-container -p 5000:5000 flask-rest-api
 ```
 
 #### Test
