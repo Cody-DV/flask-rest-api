@@ -14,10 +14,12 @@ requests_schema = RequestSchema(many=True)
 @app.route('/request', methods=['POST'])
 def add_request():
     """
-    Create a new Request for a book and add to the database.
+    Create a new Request for a book and adds it to the database.
     Requires that email is in valid format and
     title exists in the Books table.
+
     """
+
     try:
         title = request.json['title']
         email = request.json['email']
@@ -58,9 +60,8 @@ def get_all_requests():
         all_requests = Request.query.all()
         result = requests_schema.dump(all_requests)
 
-        # TODO: Fix for empty array response
         if not result:
-            api_response("success", "No Requests were returned."), 204
+            return api_response("success", "No Requests were returned."), 204
 
         return api_response("success", result), 200
 
