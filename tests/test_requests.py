@@ -23,7 +23,7 @@ def test_add_request_fail_bad_title():
         "email": "email@gmail.com"
     }
     response = requests.post(base_url, json.dumps(data), headers=headers)
-    assert response.status_code == 404
+    assert response.status_code == 400
 
 
 def test_add_request_fail_bad_email():

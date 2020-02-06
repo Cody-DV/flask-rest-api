@@ -38,8 +38,6 @@ def check_book_exists(title):
 
     """
 
-    result = False
-
     try:
         result = db.session.query(Book).filter(Book.title == title).one()
         return result is not None
@@ -47,11 +45,10 @@ def check_book_exists(title):
     except Exception as e:
         # log e
         print(str(e))
+        return False
 
-    return result
 
-
-def api_response(status, data):
+def api_response(data=None):
     """
     Builds and returns a standardized json response
     following the jsend guidelines.
@@ -59,11 +56,8 @@ def api_response(status, data):
     https://github.com/omniti-labs/jsend
 
     Args:
-        status: a string indicating status of the request
-                'success', 'error', 'fail'
-        data: a dict containing the response data for
-                success and fail or a String with the error
-                message if status is error.
+        data: a dict containing the response data
+                
     Returns:
         A json response in the format:
 
@@ -75,31 +69,13 @@ def api_response(status, data):
                 "status": "success"
             }
 
-        or, on error:
-
-            {
-                "message": "Title with ID: 24 not found",
-                "status": "error"
-            }
-
     Raises:
 
     """
 
-    # TODO: Handle exceptions
-
-    response = ''
-
-    if status == "fail" or status == "success":
-        response = {
-            "status": status,
-            "data": data
-        }
-
-    if status == "error":
-        response = {
-            "status": "error",
-            "message": data
-        }
+    response = {
+        "status": "success",
+        "data": data
+    }
 
     return jsonify(response)

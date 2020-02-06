@@ -1,10 +1,10 @@
 from flask import request
-# from flask_sqlalchemy import IntegrityError
 from validate_email import validate_email
 from flask import current_app as app
 from . import db
 from .models import Request, RequestSchema
 from .utils import check_book_exists, api_response
+from .errors import BadRequest, NotFound
 
 
 request_schema = RequestSchema()
@@ -20,69 +20,50 @@ def add_request():
 
     """
 
-    try:
-        title = request.json['title']
-        email = request.json['email']
+    title = request.json['title']
+    email = request.json['email']
 
-        # Validate email format
-        if not validate_email(email):
-            return api_response("fail", {"email": "Email provided is not in a valid format."}), 400
+    # Validate email format
+    if not validate_email(email):
+        raise BadRequest({"email": "Email provided is not in a valid format."})
 
-        # Verifiy title exists in Books table
-        if not check_book_exists(title):
-            return api_response("fail", {"title": f"Book {title} not found in Library"}), 404
+    # Verifiy title exists in Books table
+    if not check_book_exists(title):
+        raise BadRequest({"title": f"Book {title} not found in Library"})
 
-        new_request = Request(title=title, email=email)
+    new_request = Request(title=title, email=email)
 
-        db.session.add(new_request)
-        db.session.commit()
+    db.session.add(new_request)
+    db.session.commit()
 
-        result = request_schema.dump(new_request)
+    result = request_schema.dump(new_request)
 
-        return api_response("success", result), 201
-
-    # except IntegrityError as e:
-    #     # db.session.rollback()
-    #     return jsonify({"status": "error", "message": str(e)}), 400
-
-    except Exception as e:
-        # Log Error
-        print(str(e))
-        # db.session.rollback()
-        return api_response("error", "Internal server error."), 500
+    return api_response(result), 201
 
 
 @app.route('/request', methods=['GET'])
 def get_all_requests():
     """ Fetch all requests """
 
-    try:
-        all_requests = Request.query.all()
-        result = requests_schema.dump(all_requests)
+    all_requests = Request.query.all()
+    result = requests_schema.dump(all_requests)
 
-        if not result:
-            return api_response("success", "No Requests were returned."), 204
+    if not result:
+        return api_response("No Requests were returned"), 204
 
-        return api_response("success", result), 200
-
-    except Exception:
-        return api_response("error", "Internal server error."), 500
+    return api_response(result), 200
 
 
 @app.route('/request/<id>', methods=['GET'])
 def get_request(id):
     """ Fetch one request by ID """
 
-    try:
-        request = Request.query.get(id)
+    request = Request.query.get(id)
 
-        if not request:
-            return api_response("error", f"Title with ID: {id} not found"), 404
+    if not request:
+        raise NotFound(f"Title with ID: {id} not found")
 
-        return api_response("success", request_schema.dump(request))
-
-    except Exception:
-        return api_response("error", "Internal server error."), 500
+    return api_response(request_schema.dump(request)), 200
 
 
 @app.route('/request/<id>', methods=['DELETE'])
@@ -90,7 +71,9 @@ def delete_request(id):
     """ Delete request by ID """
 
     request = Request.query.get(id)
+    if not request:
+        raise NotFound(f"Request with ID: {id} not found")
     db.session.delete(request)
     db.session.commit()
 
-    return api_response("success", ""), 200
+    return api_response(), 200
