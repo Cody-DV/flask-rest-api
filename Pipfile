@@ -16,6 +16,8 @@ python-dotenv = "*"
 validate-email = "*"
 pytest = "*"
 requests = "*"
+factory-boy = "*"
+psycopg2-binary = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3.8"

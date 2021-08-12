@@ -1,10 +1,25 @@
 import pytest
 import requests
 import json
-
+from .factories import BookFactory
 
 base_url = 'http://localhost:5000/request'
 headers = {'Content-Type': 'application/json'}
+
+
+def test_factory():
+    # books = BookFactory.create_batch(size=4)
+    #
+    book = BookFactory.create(title="Test Book")
+    # for book in books:
+    #     print(f'Title: {book.title}')
+
+    response = requests.get(base_url, headers=headers)
+
+    print(response.json)
+    breakpoint()
+
+    assert book.title in response.json
 
 
 # Add new request
