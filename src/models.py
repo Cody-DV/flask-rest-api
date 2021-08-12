@@ -23,3 +23,8 @@ class Book(db.Model):
 
     def __repr__(self):
         return(f'<Title: {self.title}')
+
+
+class BookSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'title')

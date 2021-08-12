@@ -60,5 +60,5 @@ def handle_uncaught_exception(error):
     """
     payload = dict()
     payload['status'] = 'error'
-    payload['message'] = "Internal Server Error"
+    payload['message'] = "Internal Server Error: " + error.data
     return jsonify(payload), 500
