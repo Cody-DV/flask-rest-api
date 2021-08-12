@@ -2,18 +2,33 @@ from flask import request
 from validate_email import validate_email
 from flask import current_app as app
 from . import db
-from .models import Request, RequestSchema
+from .models import Request, RequestSchema, Book, BookSchema
 from .utils import check_book_exists, api_response
 from .errors import BadRequest, NotFound
 
 
 request_schema = RequestSchema()
 requests_schema = RequestSchema(many=True)
+book_schema = BookSchema()
+books_schema = BookSchema(many=True)
 
 
 @app.route('/', methods=['GET'])
 def welcome():
     return api_response("Welcome - Server is live"), 200
+
+
+@app.route('/books', methods=['GET'])
+def get_books():
+    """ Get all books """
+
+    all_books = Book.query.all()
+    result = books_schema.dump(all_books)
+
+    if not result:
+        return api_response("No Books were returned"), 204
+
+    return api_response(result), 200
 
 
 @app.route('/request', methods=['POST'])
@@ -22,7 +37,6 @@ def add_request():
     Create a new Request for a book and adds it to the database.
     Requires that email is in valid format and
     title exists in the Books table.
-
     """
 
     title = request.json['title']
