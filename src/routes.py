@@ -11,6 +11,11 @@ request_schema = RequestSchema()
 requests_schema = RequestSchema(many=True)
 
 
+@app.route('/', methods=['GET'])
+def welcome():
+    return api_response("Welcome - Server is live"), 200
+
+
 @app.route('/request', methods=['POST'])
 def add_request():
     """
@@ -27,7 +32,7 @@ def add_request():
     if not validate_email(email):
         raise BadRequest({"email": "Email provided is not in a valid format."})
 
-    # Verifiy title exists in Books table
+    # Verify title exists in Books table
     if not check_book_exists(title):
         raise BadRequest({"title": f"Book {title} not found in Library"})
 
