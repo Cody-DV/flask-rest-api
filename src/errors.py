@@ -36,7 +36,7 @@ def handle_bad_request(error):
     """
     payload = dict()
     payload['status'] = 'fail'
-    payload['data'] = error.data
+    payload['data'] = str(error)
     return jsonify(payload), 400
 
 
@@ -48,7 +48,7 @@ def handle_not_found(error):
     """
     payload = dict()
     payload['status'] = 'error'
-    payload['message'] = error.data
+    payload['message'] = str(error)
     return jsonify(payload), 404
 
 
@@ -60,5 +60,5 @@ def handle_uncaught_exception(error):
     """
     payload = dict()
     payload['status'] = 'error'
-    payload['message'] = "Internal Server Error: " + error.data
+    payload['message'] = str(error)
     return jsonify(payload), 500
