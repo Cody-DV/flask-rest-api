@@ -9,7 +9,7 @@ services:
         env_file:
             - .env
         volumes:
-            - postgres_data:/var/lib/postgresql/data
+            - postgres_data_ci:/var/lib/postgresql/data
     api:
         build: .
         container_name: api
@@ -22,13 +22,13 @@ services:
             - sh
         ports:
             - 5000:5000
-        env_file: 
+        environment:
+            - SQLALCHEMY_TRACK_MODIFICATIONS=False
+        env_file:
             - .env
-        volumes:
-            - .:/src
         depends_on:
             - db
 
 volumes:
-    postgres_data:
+    postgres_data_ci:
         driver: local

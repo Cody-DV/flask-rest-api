@@ -18,6 +18,7 @@ pytest = "*"
 requests = "*"
 factory-boy = "*"
 psycopg2-binary = "*"
+wait-for-it = "*"
 
 [requires]
 python_version = "3.8"
